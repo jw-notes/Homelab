@@ -41,11 +41,10 @@ The executable will be in `dist/HomeServer-Connect` directory.
 - __Samba Toggle__: Start/stop Samba service on remote server
 - __Open SSH Terminal__: Direct terminal access
 
-External image blocked pending consentSource: `https://via.placeholder.com/400x250?text=HomeServer+Connect+UI`\
-Alt: `Screenshot`Load image
+<img width="424" height="818" alt="image" src="https://github.com/user-attachments/assets/0bcf7388-31d6-48eb-ab9f-6dcb7772a2c8" />
 
 ## Technical Notes
 
 - Uses Windows `net use` for SMB authentication
 - Linux uses GVfs for SMB access
-- Configuration stored in `%APPDATA%/HomeServer Connect/config.json` (Windows) or `~/.config/HomeServer Connect/config.json` (Linux
+- Configuration stored in `%APPDATA%/HomeServer Connect/config.json` (Windows) or `~/.config/HomeServer Connect/config.json` (Linux)
