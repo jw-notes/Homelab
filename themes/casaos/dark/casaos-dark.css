@@ -1,0 +1,2875 @@
+/*
+ * HomeServer Theme for CasaOS — v32
+ * Made by jw-notes — https://github.com/jw-notes
+ *
+ * Styles the dashboard, Files, settings, App Store, and Terminal & Logs.
+ * Load alongside casaos-dark.js; body classes supplied by the script activate
+ * dark/light mode and navigation states. Later rules intentionally override
+ * earlier compatibility layers; preserve their order.
+ *
+ * Compatibility: targets CasaOS component classes and English UI labels.
+ * Future CasaOS releases or other interface languages may require changes.
+ * Unofficial community theme; not affiliated with CasaOS or IceWhale.
+ */
+
+:root {
+  --hs-dark-surface: #2f3237;
+  --hs-dark-surface-2: #383c42;
+  --hs-dark-surface-3: #25282d;
+  --hs-dark-panel: #30343a;
+  --hs-dark-hover: rgba(255,255,255,.075);
+  --hs-dark-active: rgba(255,255,255,.11);
+  --hs-dark-border: rgba(255,255,255,.10);
+
+  --hs-text: #eef1f4;
+  --hs-text-muted: #b4bbc4;
+  --hs-text-faint: #8e97a2;
+
+  --hs-accent: #35d0ba;
+
+  --hs-light-text: #111820;
+  --hs-light-border: rgba(10,15,20,.12);
+}
+
+/* =========================================================
+   REMOVE CASAOS / ICEWHALE PROMO UI
+   ========================================================= */
+
+.brand-bar,
+.contact-bar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+/*
+ * the CasaOS top bar lives on the left.
+ * The hamburger/theme buttons sit first, and the rest of the
+ * original CasaOS controls continue immediately to the right.
+ */
+.navbar.top-bar {
+  position: fixed !important;
+  left: 16px !important;
+  top: 12px !important;
+  right: auto !important;
+
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: calc(100vw - 32px) !important;
+
+  margin: 0 !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+
+  border-radius: 14px !important;
+
+  z-index: 99999 !important;
+
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease !important;
+}
+
+/*
+ * IMPORTANT:
+ * No search-bar, search-input, placeholder or search-component
+ * selectors exist in this stylesheet.
+ */
+
+/* =========================================================
+   LEFT-SIDE HOMESERVER CONTROLS
+   ========================================================= */
+
+#hs-toolbar {
+  position: static !important;
+
+  display: flex !important;
+  align-items: center;
+  gap: 7px;
+
+  flex: 0 0 auto;
+  margin: 0 8px 0 0 !important;
+
+  z-index: 100000 !important;
+}
+
+.hs-toolbar-button {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(47,50,55,.94);
+  color: #fff;
+
+  min-width: 34px;
+  height: 34px;
+  padding: 0 9px;
+
+  border-radius: 9px;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font: inherit;
+  line-height: 1;
+
+  box-shadow: 0 8px 22px rgba(0,0,0,.18);
+
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease;
+}
+
+.hs-toolbar-button:hover {
+  background: #3a3e44;
+  border-color: rgba(255,255,255,.18);
+}
+
+.hs-toolbar-button:active {
+  transform: scale(.96);
+}
+
+.hs-hamburger {
+  width: 18px;
+  height: 14px;
+  position: relative;
+  display: inline-block;
+}
+
+.hs-hamburger::before,
+.hs-hamburger::after,
+.hs-hamburger span {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transition: transform 160ms ease, top 160ms ease, opacity 160ms ease;
+}
+
+.hs-hamburger::before { top: 0; }
+.hs-hamburger span { top: 6px; }
+.hs-hamburger::after { top: 12px; }
+
+body.hs-nav-collapsed .hs-hamburger::before {
+  top: 6px;
+  transform: rotate(45deg);
+}
+
+body.hs-nav-collapsed .hs-hamburger span {
+  opacity: 0;
+}
+
+body.hs-nav-collapsed .hs-hamburger::after {
+  top: 6px;
+  transform: rotate(-45deg);
+}
+
+/* When collapsed, keep only our controls visible. */
+body.hs-nav-collapsed .navbar.top-bar > *:not(#hs-toolbar) {
+  display: none !important;
+}
+
+body.hs-nav-collapsed .navbar.top-bar {
+  display: flex !important;
+  width: fit-content !important;
+  padding: 6px !important;
+}
+
+/* =========================================================
+   DARK / LIGHT NAVBAR
+   ========================================================= */
+
+body.hs-dark .navbar.top-bar {
+  background: rgba(47,50,55,.94) !important;
+  color: var(--hs-text) !important;
+  box-shadow:
+    0 1px 0 var(--hs-dark-border),
+    0 10px 30px rgba(0,0,0,.23) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+body.hs-light .navbar.top-bar {
+  background: rgba(246,248,250,.95) !important;
+  color: var(--hs-light-text) !important;
+  box-shadow:
+    0 1px 0 var(--hs-light-border),
+    0 10px 26px rgba(0,0,0,.10) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Make all normal top-bar icons dark in light mode. */
+body.hs-light .navbar.top-bar .icon,
+body.hs-light .navbar.top-bar .icon *,
+body.hs-light .navbar.top-bar i,
+body.hs-light .navbar.top-bar svg,
+body.hs-light .navbar.top-bar svg * {
+  color: #111820 !important;
+  fill: currentColor !important;
+  stroke: currentColor;
+}
+
+body.hs-light .hs-toolbar-button {
+  color: #111820 !important;
+  background: rgba(246,248,250,.96) !important;
+  border-color: rgba(0,0,0,.10) !important;
+}
+
+body.hs-light .hs-toolbar-button:hover {
+  background: #fff !important;
+}
+
+/* =========================================================
+   DROPDOWNS
+   ========================================================= */
+
+body.hs-dark .dropdown-content {
+  background: var(--hs-dark-panel) !important;
+  border: 1px solid var(--hs-dark-border) !important;
+  color: var(--hs-text) !important;
+}
+
+body.hs-dark .dropdown-content .dropdown-item,
+body.hs-dark .dropdown-content a.dropdown-item,
+body.hs-dark .dropdown-content button.dropdown-item {
+  background: transparent !important;
+  color: var(--hs-text) !important;
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+}
+
+body.hs-dark .dropdown-content .dropdown-item > *,
+body.hs-dark .dropdown-content a.dropdown-item > *,
+body.hs-dark .dropdown-content button.dropdown-item > * {
+  color: inherit !important;
+}
+
+body.hs-dark .dropdown-content .dropdown-item:hover,
+body.hs-dark .dropdown-content a.dropdown-item:hover,
+body.hs-dark .dropdown-content button.dropdown-item:hover {
+  background: var(--hs-dark-hover) !important;
+  color: #fff !important;
+}
+
+body.hs-dark .dropdown-content .dropdown-item:focus,
+body.hs-dark .dropdown-content .dropdown-item:focus-visible,
+body.hs-dark .dropdown-content .dropdown-item:active,
+body.hs-dark .dropdown-content .dropdown-item.is-active,
+body.hs-dark .dropdown-content .dropdown-item.is-selected,
+body.hs-dark .dropdown-content a.dropdown-item:focus,
+body.hs-dark .dropdown-content a.dropdown-item:focus-visible,
+body.hs-dark .dropdown-content a.dropdown-item:active,
+body.hs-dark .dropdown-content a.dropdown-item.is-active,
+body.hs-dark .dropdown-content a.dropdown-item.is-selected,
+body.hs-dark .dropdown-content button.dropdown-item:focus,
+body.hs-dark .dropdown-content button.dropdown-item:focus-visible,
+body.hs-dark .dropdown-content button.dropdown-item:active,
+body.hs-dark .dropdown-content button.dropdown-item.is-active,
+body.hs-dark .dropdown-content button.dropdown-item.is-selected {
+  background: var(--hs-dark-active) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+body.hs-dark .dropdown-content .icon,
+body.hs-dark .dropdown-content .icon i,
+body.hs-dark .dropdown-content svg {
+  color: var(--hs-text) !important;
+  fill: currentColor;
+}
+
+
+/* no washed-out grey text inside dropdown cards. */
+body.hs-dark .dropdown-content,
+body.hs-dark .dropdown-content span,
+body.hs-dark .dropdown-content p,
+body.hs-dark .dropdown-content label,
+body.hs-dark .dropdown-content strong,
+body.hs-dark .dropdown-content .has-text-grey,
+body.hs-dark .dropdown-content .has-text-grey-light,
+body.hs-dark .dropdown-content small {
+  color: var(--hs-text) !important;
+}
+
+/* Keep genuinely disabled items visibly disabled, but still readable. */
+body.hs-dark .dropdown-content [disabled],
+body.hs-dark .dropdown-content .is-disabled {
+  color: #a7adb5 !important;
+  opacity: .72;
+}
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+body.hs-dark .hs-settings-panel,
+body.hs-dark .hs-settings-panel .modal-card,
+body.hs-dark .hs-settings-panel .modal-card-body,
+body.hs-dark .hs-settings-panel .modal-card-head,
+body.hs-dark .hs-settings-panel .modal-card-foot,
+body.hs-dark .hs-settings-panel .dropdown-content,
+body.hs-dark .hs-settings-panel .box,
+body.hs-dark .hs-settings-panel .card {
+  background: var(--hs-dark-surface) !important;
+  color: var(--hs-text) !important;
+  border-color: var(--hs-dark-border) !important;
+}
+
+body.hs-dark .hs-settings-panel .title,
+body.hs-dark .hs-settings-panel .subtitle,
+body.hs-dark .hs-settings-panel .label,
+body.hs-dark .hs-settings-panel label,
+body.hs-dark .hs-settings-panel p,
+body.hs-dark .hs-settings-panel span:not(.icon),
+body.hs-dark .hs-settings-panel .field,
+body.hs-dark .hs-settings-panel .control {
+  color: var(--hs-text) !important;
+}
+
+body.hs-dark .hs-settings-panel .help,
+body.hs-dark .hs-settings-panel .has-text-grey,
+body.hs-dark .hs-settings-panel .has-text-grey-light {
+  color: var(--hs-text-muted) !important;
+}
+
+/* Search Engine / Language selects */
+body.hs-dark .hs-settings-panel .select select {
+  background: var(--hs-dark-surface-3) !important;
+  color: var(--hs-text) !important;
+  border-color: var(--hs-dark-border) !important;
+  box-shadow: none !important;
+}
+
+body.hs-dark .hs-settings-panel .select select option {
+  background: var(--hs-dark-surface-3) !important;
+  color: var(--hs-text) !important;
+}
+
+/*
+ * Stop Settings rows from flashing white during mouse-down / keyboard focus.
+ * This is scoped ONLY to the settings panel.
+ */
+body.hs-dark .hs-settings-panel a:active,
+body.hs-dark .hs-settings-panel a:focus,
+body.hs-dark .hs-settings-panel button:active,
+body.hs-dark .hs-settings-panel button:focus,
+body.hs-dark .hs-settings-panel label:active,
+body.hs-dark .hs-settings-panel .field:active,
+body.hs-dark .hs-settings-panel .control:active,
+body.hs-dark .hs-settings-panel [role="button"]:active,
+body.hs-dark .hs-settings-panel [tabindex]:focus {
+  background-color: transparent !important;
+  color: var(--hs-text) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Bulma / Buefy switches and checkboxes */
+body.hs-dark .hs-settings-panel .switch input[type="checkbox"] + .check,
+body.hs-dark .hs-settings-panel .checkbox input[type="checkbox"] + .check {
+  border-color: var(--hs-dark-border) !important;
+}
+
+body.hs-dark .hs-settings-panel .switch input[type="checkbox"]:active + .check,
+body.hs-dark .hs-settings-panel .switch input[type="checkbox"]:focus + .check,
+body.hs-dark .hs-settings-panel .checkbox input[type="checkbox"]:active + .check,
+body.hs-dark .hs-settings-panel .checkbox input[type="checkbox"]:focus + .check {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Select mouse-down/focus should stay dark. */
+body.hs-dark .hs-settings-panel select:active,
+body.hs-dark .hs-settings-panel select:focus {
+  background-color: var(--hs-dark-surface-3) !important;
+  color: var(--hs-text) !important;
+  border-color: var(--hs-accent) !important;
+  box-shadow: 0 0 0 2px rgba(53,208,186,.12) !important;
+  outline: none !important;
+}
+
+/* =========================================================
+   GENERAL MODALS
+   ========================================================= */
+
+body.hs-dark .modal-card,
+body.hs-dark .modal-card-head,
+body.hs-dark .modal-card-body,
+body.hs-dark .modal-card-foot,
+body.hs-dark .modal-content {
+  background-color: var(--hs-dark-surface) !important;
+  border-color: var(--hs-dark-border) !important;
+}
+
+body.hs-dark .modal-card-head,
+body.hs-dark .modal-card-foot {
+  background-color: var(--hs-dark-surface-2) !important;
+}
+
+body.hs-dark .modal-card .title,
+body.hs-dark .modal-card .subtitle,
+body.hs-dark .modal-card .label,
+body.hs-dark .modal-card label,
+body.hs-dark .modal-card p,
+body.hs-dark .modal-content .title,
+body.hs-dark .modal-content .subtitle,
+body.hs-dark .modal-content .label,
+body.hs-dark .modal-content label,
+body.hs-dark .modal-content p {
+  color: var(--hs-text) !important;
+}
+
+body.hs-dark .modal-card .help,
+body.hs-dark .modal-card .has-text-grey,
+body.hs-dark .modal-card .has-text-grey-light,
+body.hs-dark .modal-content .help,
+body.hs-dark .modal-content .has-text-grey,
+body.hs-dark .modal-content .has-text-grey-light {
+  color: var(--hs-text-muted) !important;
+}
+
+/* Only modal controls. Main dashboard search bar remains untouched. */
+body.hs-dark .modal-card .input,
+body.hs-dark .modal-card .textarea,
+body.hs-dark .modal-card .select select,
+body.hs-dark .modal-content .input,
+body.hs-dark .modal-content .textarea,
+body.hs-dark .modal-content .select select {
+  background-color: var(--hs-dark-surface-3) !important;
+  color: var(--hs-text) !important;
+  border-color: var(--hs-dark-border) !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   TERMINAL & LOGS - FULL SHELL FIX
+   ========================================================= */
+
+/*
+ * casaos-dark.js tags several ancestor levels around the Terminal & Logs
+ * login UI with .hs-terminal-shell. We darken the shell itself AND
+ * plain structural wrappers inside it, which is where the remaining
+ * white rectangle was coming from.
+ */
+body.hs-dark .hs-terminal-shell,
+body.hs-dark .hs-terminal-shell .modal-card,
+body.hs-dark .hs-terminal-shell .modal-content,
+body.hs-dark .hs-terminal-shell .animation-content,
+body.hs-dark .hs-terminal-shell section,
+body.hs-dark .hs-terminal-shell form,
+body.hs-dark .hs-terminal-shell .box,
+body.hs-dark .hs-terminal-shell .card {
+  background-color: var(--hs-dark-panel) !important;
+  background-image: none !important;
+  border-color: var(--hs-dark-border) !important;
+}
+
+/* Structural divs inside the terminal login shell should not paint white. */
+body.hs-dark .hs-terminal-shell div:not(.input):not(.control):not(.select):not(.button) {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Make the immediate terminal shell children dark rather than transparent. */
+body.hs-dark .hs-terminal-shell > div,
+body.hs-dark .hs-terminal-shell > section {
+  background-color: var(--hs-dark-panel) !important;
+}
+
+/* Text */
+body.hs-dark .hs-terminal-shell,
+body.hs-dark .hs-terminal-shell .title,
+body.hs-dark .hs-terminal-shell .subtitle,
+body.hs-dark .hs-terminal-shell label,
+body.hs-dark .hs-terminal-shell p,
+body.hs-dark .hs-terminal-shell span:not(.icon),
+body.hs-dark .hs-terminal-shell a {
+  color: var(--hs-text) !important;
+}
+
+/* Login form controls */
+body.hs-dark .hs-terminal-shell .input,
+body.hs-dark .hs-terminal-shell input,
+body.hs-dark .hs-terminal-shell .textarea,
+body.hs-dark .hs-terminal-shell textarea,
+body.hs-dark .hs-terminal-shell .select select {
+  background: var(--hs-dark-surface-3) !important;
+  color: var(--hs-text) !important;
+  border-color: var(--hs-dark-border) !important;
+  box-shadow: none !important;
+}
+
+body.hs-dark .hs-terminal-shell .button:not(.is-primary):not(.is-danger):not(.is-warning):not(.is-success) {
+  background: var(--hs-dark-surface-2) !important;
+  color: var(--hs-text) !important;
+  border-color: var(--hs-dark-border) !important;
+}
+
+body.hs-dark .hs-terminal-shell iframe {
+  background: var(--hs-dark-panel) !important;
+}
+
+body.hs-dark .modal-background {
+  background-color: rgba(0,0,0,.58) !important;
+}
+
+/* =========================================================
+   POLISH
+   ========================================================= */
+
+.modal-card,
+.dropdown-content {
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgba(0,0,0,.24) !important;
+}
+
+@media (max-width: 700px) {
+  .navbar.top-bar {
+    left: 7px !important;
+    top: 7px !important;
+    max-width: calc(100vw - 14px) !important;
+  }
+
+  .hs-toolbar-button {
+    min-width: 32px;
+    height: 32px;
+  }
+}
+
+
+/* =========================================================
+   DARK-MODE CORRECTIONS
+   ========================================================= */
+
+/*
+ * Use ONE surface colour for settings + their dropdowns.
+ * This avoids the "black dropdown on grey settings card" mismatch.
+ */
+body.hs-dark .hs-settings-panel,
+body.hs-dark .hs-settings-panel .dropdown-content,
+body.hs-dark .hs-settings-panel .dropdown-menu,
+body.hs-dark .hs-settings-panel .select,
+body.hs-dark .hs-settings-panel .select select {
+  --hs-settings-surface: #2f3237;
+}
+
+/* Settings card and menus should visually belong together. */
+body.hs-dark .hs-settings-panel,
+body.hs-dark .hs-settings-panel .dropdown-content,
+body.hs-dark .hs-settings-panel .dropdown-menu .dropdown-content {
+  background-color: var(--hs-settings-surface) !important;
+  color: var(--hs-text) !important;
+}
+
+/*
+ * Firefox/OS native <select> popup:
+ * color-scheme is the reliable hint that tells the browser the control
+ * belongs to a dark UI. This is scoped to Settings only.
+ */
+body.hs-dark .hs-settings-panel .select,
+body.hs-dark .hs-settings-panel .select select {
+  color-scheme: dark !important;
+}
+
+body.hs-light .hs-settings-panel .select,
+body.hs-light .hs-settings-panel .select select {
+  color-scheme: light !important;
+}
+
+body.hs-dark .hs-settings-panel .select select,
+body.hs-dark .hs-settings-panel select {
+  background-color: #2f3237 !important;
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+body.hs-dark .hs-settings-panel select option {
+  background-color: #2f3237 !important;
+  color: #eef1f4 !important;
+}
+
+/*
+ * Remove every common white pressed/focused state from SETTINGS only.
+ * This catches Bulma/Buefy rows, buttons, controls, switches and selects.
+ */
+body.hs-dark .hs-settings-panel .hs-interactive-setting,
+body.hs-dark .hs-settings-panel .hs-interactive-setting:hover {
+  background-color: transparent !important;
+  color: var(--hs-text) !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+body.hs-dark .hs-settings-panel .hs-interactive-setting:active,
+body.hs-dark .hs-settings-panel .hs-interactive-setting:focus,
+body.hs-dark .hs-settings-panel .hs-interactive-setting:focus-visible,
+body.hs-dark .hs-settings-panel .hs-interactive-setting.is-active,
+body.hs-dark .hs-settings-panel .hs-interactive-setting.is-selected,
+body.hs-dark .hs-settings-panel .hs-pressed {
+  background-color: rgba(255,255,255,.08) !important;
+  color: #fff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Also catch nested children that paint their own white state. */
+body.hs-dark .hs-settings-panel .hs-interactive-setting:active *,
+body.hs-dark .hs-settings-panel .hs-interactive-setting:focus *,
+body.hs-dark .hs-settings-panel .hs-interactive-setting.hs-pressed * {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* =========================================================
+   ACCOUNT / LOGOUT
+   ========================================================= */
+
+/*
+ * Logout was inheriting muted/grey styling.
+ * Keep it readable but distinct without looking faded.
+ */
+body.hs-dark .hs-account-panel .hs-logout,
+body.hs-dark .hs-account-panel .hs-logout *,
+body.hs-dark .dropdown-content .hs-logout,
+body.hs-dark .dropdown-content .hs-logout * {
+  color: #ff8a8a !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .hs-account-panel .hs-logout:hover,
+body.hs-dark .dropdown-content .hs-logout:hover {
+  color: #ffaaaa !important;
+  background-color: rgba(255,90,90,.09) !important;
+}
+
+body.hs-dark .hs-account-panel .hs-logout:active,
+body.hs-dark .dropdown-content .hs-logout:active {
+  color: #ffc0c0 !important;
+  background-color: rgba(255,90,90,.14) !important;
+}
+
+/* =========================================================
+   DROPDOWN CONSISTENCY / NO WHITE FLASH
+   ========================================================= */
+
+/* All dark-mode dropdown cards use the same grey, never black. */
+body.hs-dark .dropdown-content {
+  background-color: #2f3237 !important;
+}
+
+/* Catch Buefy/Bulma click/focus states which briefly flash white. */
+body.hs-dark .dropdown-content .dropdown-item,
+body.hs-dark .dropdown-content a.dropdown-item,
+body.hs-dark .dropdown-content button.dropdown-item {
+  transition: background-color .08s ease, color .08s ease !important;
+}
+
+body.hs-dark .dropdown-content .dropdown-item:active,
+body.hs-dark .dropdown-content .dropdown-item:focus,
+body.hs-dark .dropdown-content .dropdown-item:focus-visible,
+body.hs-dark .dropdown-content .dropdown-item.is-active,
+body.hs-dark .dropdown-content .dropdown-item.is-selected,
+body.hs-dark .dropdown-content .dropdown-item.hs-pressed,
+body.hs-dark .dropdown-content a.dropdown-item:active,
+body.hs-dark .dropdown-content a.dropdown-item:focus,
+body.hs-dark .dropdown-content a.dropdown-item:focus-visible,
+body.hs-dark .dropdown-content a.dropdown-item.is-active,
+body.hs-dark .dropdown-content a.dropdown-item.is-selected,
+body.hs-dark .dropdown-content a.dropdown-item.hs-pressed,
+body.hs-dark .dropdown-content button.dropdown-item:active,
+body.hs-dark .dropdown-content button.dropdown-item:focus,
+body.hs-dark .dropdown-content button.dropdown-item:focus-visible,
+body.hs-dark .dropdown-content button.dropdown-item.is-active,
+body.hs-dark .dropdown-content button.dropdown-item.is-selected,
+body.hs-dark .dropdown-content button.dropdown-item.hs-pressed {
+  background-color: rgba(255,255,255,.08) !important;
+  color: #fff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   TERMINAL & LOGS TRANSPARENCY
+   ========================================================= */
+
+/*
+ * Earlier rules paint the Terminal shell grey.
+ * Logs already shows the underlying glass/transparency correctly.
+ * These later overrides keep the outer Terminal & Logs shell transparent and only
+ * paints actual login controls/cards where needed.
+ */
+body.hs-dark .hs-terminal-shell,
+body.hs-dark .hs-terminal-shell > div,
+body.hs-dark .hs-terminal-shell > section,
+body.hs-dark .hs-terminal-shell .animation-content,
+body.hs-dark .hs-terminal-shell .modal-content {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Actual login form/card remains readable on the transparent shell. */
+body.hs-dark .hs-terminal-shell .hs-terminal-login-card,
+body.hs-dark .hs-terminal-shell form.hs-terminal-login-card {
+  background-color: rgba(47,50,55,.92) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 12px !important;
+}
+
+/* Terminal/log content wrappers themselves should not add a grey slab. */
+body.hs-dark .hs-terminal-shell .hs-terminal-content {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Inputs are still solid enough to read. */
+body.hs-dark .hs-terminal-shell input,
+body.hs-dark .hs-terminal-shell .input,
+body.hs-dark .hs-terminal-shell textarea,
+body.hs-dark .hs-terminal-shell .textarea,
+body.hs-dark .hs-terminal-shell select {
+  background-color: #25282d !important;
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+
+/* =========================================================
+   PANEL APPEARANCE OVERRIDES
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   TERMINAL & LOGS
+   Make the whole CasaOS Terminal modal/card solid again.
+   --------------------------------------------------------- */
+
+body.hs-dark .hs-terminal-shell,
+body.hs-dark .hs-terminal-shell > div,
+body.hs-dark .hs-terminal-shell > section,
+body.hs-dark .hs-terminal-shell .animation-content,
+body.hs-dark .hs-terminal-shell .modal-content,
+body.hs-dark .hs-terminal-shell .modal-card,
+body.hs-dark .hs-terminal-shell .modal-card-head,
+body.hs-dark .hs-terminal-shell .modal-card-body,
+body.hs-dark .hs-terminal-shell .modal-card-foot {
+  background-color: #2f3237 !important;
+  background-image: none !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+/* Keep the actual terminal/log viewport slightly darker. */
+body.hs-dark .hs-terminal-shell .hs-terminal-content,
+body.hs-dark .hs-terminal-shell pre,
+body.hs-dark .hs-terminal-shell code,
+body.hs-dark .hs-terminal-shell iframe {
+  background-color: #25282d !important;
+  color: #eef1f4 !important;
+}
+
+/* Login card should blend into the modal, not float as a transparent glass box. */
+body.hs-dark .hs-terminal-shell .hs-terminal-login-card,
+body.hs-dark .hs-terminal-shell form.hs-terminal-login-card {
+  background-color: #2f3237 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ---------------------------------------------------------
+   AUTOFILL
+   Firefox/Chromium can paint saved login fields yellow/white.
+   --------------------------------------------------------- */
+
+body.hs-dark .hs-terminal-shell input:-webkit-autofill,
+body.hs-dark .hs-terminal-shell input:-webkit-autofill:hover,
+body.hs-dark .hs-terminal-shell input:-webkit-autofill:focus,
+body.hs-dark .hs-terminal-shell textarea:-webkit-autofill,
+body.hs-dark .hs-terminal-shell select:-webkit-autofill {
+  -webkit-text-fill-color: #eef1f4 !important;
+  -webkit-box-shadow: 0 0 0 1000px #25282d inset !important;
+  box-shadow: 0 0 0 1000px #25282d inset !important;
+  caret-color: #eef1f4 !important;
+  transition: background-color 9999s ease-out 0s !important;
+}
+
+body.hs-dark .hs-terminal-shell input,
+body.hs-dark .hs-terminal-shell .input,
+body.hs-dark .hs-terminal-shell textarea,
+body.hs-dark .hs-terminal-shell .textarea,
+body.hs-dark .hs-terminal-shell select {
+  background-color: #25282d !important;
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+/* ---------------------------------------------------------
+   CUSTOM SETTINGS SELECTS
+   These replace native Search Engine/Language <select> popups
+   so Firefox/Windows cannot show the white native menu.
+   --------------------------------------------------------- */
+
+.hs-custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.hs-custom-select-native {
+  display: none !important;
+}
+
+.hs-custom-select-button {
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 32px 5px 10px;
+  text-align: left;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  font: inherit;
+}
+
+body.hs-dark .hs-custom-select-button {
+  background: #2f3237 !important;
+  color: #eef1f4 !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+}
+
+body.hs-light .hs-custom-select-button {
+  background: #fff !important;
+  color: #111820 !important;
+  border: 1px solid rgba(0,0,0,.15) !important;
+}
+
+.hs-custom-select-button::after {
+  content: "";
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-65%) rotate(45deg);
+  opacity: .8;
+}
+
+.hs-custom-select-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 200000;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 260px;
+  overflow-y: auto;
+  box-shadow: 0 14px 36px rgba(0,0,0,.28);
+}
+
+body.hs-dark .hs-custom-select-menu {
+  background: #2f3237 !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+body.hs-light .hs-custom-select-menu {
+  background: #fff !important;
+  border: 1px solid rgba(0,0,0,.12) !important;
+}
+
+.hs-custom-select-option {
+  display: block;
+  width: 100%;
+  border: 0;
+  text-align: left;
+  padding: 8px 10px;
+  cursor: pointer;
+  font: inherit;
+}
+
+body.hs-dark .hs-custom-select-option {
+  background: transparent !important;
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .hs-custom-select-option:hover,
+body.hs-dark .hs-custom-select-option:focus,
+body.hs-dark .hs-custom-select-option:active,
+body.hs-dark .hs-custom-select-option.is-selected {
+  background: rgba(255,255,255,.09) !important;
+  color: #fff !important;
+  outline: none !important;
+}
+
+body.hs-light .hs-custom-select-option {
+  background: transparent !important;
+  color: #111820 !important;
+}
+
+body.hs-light .hs-custom-select-option:hover,
+body.hs-light .hs-custom-select-option:focus,
+body.hs-light .hs-custom-select-option:active,
+body.hs-light .hs-custom-select-option.is-selected {
+  background: rgba(0,0,0,.06) !important;
+  color: #111820 !important;
+  outline: none !important;
+}
+
+/* ---------------------------------------------------------
+   SETTINGS WHITE-FLICKER CLEANUP
+   --------------------------------------------------------- */
+
+body.hs-dark .hs-settings-panel *,
+body.hs-dark .hs-settings-panel *::before,
+body.hs-dark .hs-settings-panel *::after {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+body.hs-dark .hs-settings-panel button:active,
+body.hs-dark .hs-settings-panel button:focus,
+body.hs-dark .hs-settings-panel [role="button"]:active,
+body.hs-dark .hs-settings-panel [role="button"]:focus,
+body.hs-dark .hs-settings-panel .switch:active,
+body.hs-dark .hs-settings-panel .checkbox:active,
+body.hs-dark .hs-settings-panel .field:active,
+body.hs-dark .hs-settings-panel .control:active {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Make normal Settings text brighter and cleaner. */
+body.hs-dark .hs-settings-panel,
+body.hs-dark .hs-settings-panel label,
+body.hs-dark .hs-settings-panel p,
+body.hs-dark .hs-settings-panel span:not(.icon),
+body.hs-dark .hs-settings-panel .field,
+body.hs-dark .hs-settings-panel .control {
+  color: #eef1f4 !important;
+}
+
+/* Logout: readable, not washed out. */
+body.hs-dark .hs-account-panel .hs-logout,
+body.hs-dark .hs-account-panel .hs-logout *,
+body.hs-dark .dropdown-content .hs-logout,
+body.hs-dark .dropdown-content .hs-logout * {
+  color: #ff7070 !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+
+/* =========================================================
+   HOVER / STORE / TERMINAL GLASS FIXES
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   HOVER / TOOLTIP CARDS
+   CasaOS/Buefy can render these outside the original card tree,
+   so style the floating surfaces directly in dark mode.
+   --------------------------------------------------------- */
+
+body.hs-dark .tooltip-content,
+body.hs-dark .tooltip .tooltip-content,
+body.hs-dark .b-tooltip .tooltip-content,
+body.hs-dark .popper,
+body.hs-dark [role="tooltip"],
+body.hs-dark .hs-floating-card {
+  background: rgba(47,50,55,.96) !important;
+  color: #f3f5f7 !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,.28) !important;
+}
+
+body.hs-dark .tooltip-content *,
+body.hs-dark .tooltip .tooltip-content *,
+body.hs-dark .b-tooltip .tooltip-content *,
+body.hs-dark .popper *,
+body.hs-dark [role="tooltip"] *,
+body.hs-dark .hs-floating-card * {
+  color: #f3f5f7 !important;
+}
+
+/* Tooltip arrows */
+body.hs-dark .tooltip-content::before,
+body.hs-dark .tooltip-content::after,
+body.hs-dark .popper .popper__arrow {
+  border-color: rgba(47,50,55,.96) transparent transparent transparent !important;
+}
+
+/* ---------------------------------------------------------
+   APP STORE DESCRIPTION / DETAIL CARDS
+   --------------------------------------------------------- */
+
+body.hs-dark .hs-store-panel,
+body.hs-dark .hs-store-panel .card,
+body.hs-dark .hs-store-panel .box,
+body.hs-dark .hs-store-panel .modal-card,
+body.hs-dark .hs-store-panel .modal-card-head,
+body.hs-dark .hs-store-panel .modal-card-body,
+body.hs-dark .hs-store-panel .modal-card-foot,
+body.hs-dark .hs-store-panel .modal-content,
+body.hs-dark .hs-store-panel .notification,
+body.hs-dark .hs-store-panel .message,
+body.hs-dark .hs-store-panel .hs-description-card {
+  background: rgba(47,50,55,.94) !important;
+  color: #f3f5f7 !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+body.hs-dark .hs-store-panel .title,
+body.hs-dark .hs-store-panel .subtitle,
+body.hs-dark .hs-store-panel p,
+body.hs-dark .hs-store-panel span,
+body.hs-dark .hs-store-panel label,
+body.hs-dark .hs-store-panel strong,
+body.hs-dark .hs-store-panel small,
+body.hs-dark .hs-store-panel .content,
+body.hs-dark .hs-store-panel .content * {
+  color: #f3f5f7 !important;
+}
+
+body.hs-dark .hs-store-panel a {
+  color: #79aaff !important;
+}
+
+body.hs-dark .hs-store-panel .has-text-grey,
+body.hs-dark .hs-store-panel .has-text-grey-light,
+body.hs-dark .hs-store-panel .has-text-gray-font {
+  color: #c5cbd2 !important;
+}
+
+/* ---------------------------------------------------------
+   TERMINAL & LOGS
+   Match the translucent/glass feel instead of an opaque grey slab.
+   --------------------------------------------------------- */
+
+body.hs-dark .hs-terminal-shell,
+body.hs-dark .hs-terminal-shell > div,
+body.hs-dark .hs-terminal-shell > section,
+body.hs-dark .hs-terminal-shell .animation-content,
+body.hs-dark .hs-terminal-shell .modal-content,
+body.hs-dark .hs-terminal-shell .modal-card,
+body.hs-dark .hs-terminal-shell .modal-card-head,
+body.hs-dark .hs-terminal-shell .modal-card-body,
+body.hs-dark .hs-terminal-shell .modal-card-foot {
+  background: rgba(47,50,55,.70) !important;
+  background-image: none !important;
+  border-color: rgba(255,255,255,.10) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+/* Header slightly stronger so title/tabs remain clear */
+body.hs-dark .hs-terminal-shell .modal-card-head {
+  background: rgba(47,50,55,.84) !important;
+}
+
+/* Login area uses the same glass instead of a separate opaque block */
+body.hs-dark .hs-terminal-shell .hs-terminal-login-card,
+body.hs-dark .hs-terminal-shell form.hs-terminal-login-card {
+  background: rgba(47,50,55,.55) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* Terminal/log viewport can stay darker for readability */
+body.hs-dark .hs-terminal-shell .hs-terminal-content,
+body.hs-dark .hs-terminal-shell pre,
+body.hs-dark .hs-terminal-shell code,
+body.hs-dark .hs-terminal-shell iframe {
+  background: rgba(24,27,31,.82) !important;
+  color: #eef1f4 !important;
+}
+
+/* Inputs remain readable against glass */
+body.hs-dark .hs-terminal-shell input,
+body.hs-dark .hs-terminal-shell .input,
+body.hs-dark .hs-terminal-shell textarea,
+body.hs-dark .hs-terminal-shell .textarea,
+body.hs-dark .hs-terminal-shell select {
+  background-color: rgba(30,33,38,.92) !important;
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+
+/* =========================================================
+   PRECISE CASAOS COMPONENT OVERRIDES
+   Based on the actual AppPanel / TerminalCard component classes.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   APP STORE - MAIN PANEL
+   CasaOS hardcodes .app-panel .modal-card-head to #edf0f2.
+   --------------------------------------------------------- */
+
+body.hs-dark .app-panel .modal-card,
+body.hs-dark .app-panel .modal-card-body,
+body.hs-dark .app-panel .modal-card-head {
+  background: rgba(47, 50, 55, .96) !important;
+  color: #f3f5f7 !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+body.hs-dark .app-panel .modal-card-head {
+  background: rgba(52, 56, 62, .98) !important;
+}
+
+/* App list entries - override CasaOS' hardcoded #f7f7f7 hover */
+body.hs-dark .app-panel .app-item {
+  background: transparent !important;
+  color: #eef1f4 !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+body.hs-dark .app-panel .app-item:hover {
+  background: rgba(255,255,255,.07) !important;
+}
+
+body.hs-dark .app-panel .app-item:active,
+body.hs-dark .app-panel .app-item:focus,
+body.hs-dark .app-panel .app-item.is-active,
+body.hs-dark .app-panel .app-item.is-selected {
+  background: rgba(255,255,255,.11) !important;
+  color: #fff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+body.hs-dark .app-panel .app-item *,
+body.hs-dark .app-panel .app-item:hover * {
+  color: inherit;
+}
+
+/* ---------------------------------------------------------
+   APP DETAIL - ACTUAL .app-detial COMPONENT
+   --------------------------------------------------------- */
+
+body.hs-dark .app-detial,
+body.hs-dark .app-detial .modal-card-body,
+body.hs-dark .app-detial .modal-card-head {
+  background: rgba(47,50,55,.96) !important;
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .app-detial .app-header {
+  background: transparent !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+body.hs-dark .app-detial .store-title,
+body.hs-dark .app-detial .subtitle,
+body.hs-dark .app-detial .heading,
+body.hs-dark .app-detial .title,
+body.hs-dark .app-detial .footing,
+body.hs-dark .app-detial .description {
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .app-detial .level .footing {
+  color: #c9cfd6 !important;
+}
+
+/* Back button */
+body.hs-dark .app-detial .button.is-ghost {
+  background: transparent !important;
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .app-detial .button.is-ghost:hover,
+body.hs-dark .app-detial .button.is-ghost:active {
+  background: rgba(255,255,255,.07) !important;
+  color: #fff !important;
+}
+
+/* ---------------------------------------------------------
+   APP DETAIL DESCRIPTION - VMdEditor / markdown preview
+   This is the white description surface that generic .card rules missed.
+   --------------------------------------------------------- */
+
+body.hs-dark .app-detial .app-desc,
+body.hs-dark .app-detial .app-desc .v-md-editor,
+body.hs-dark .app-detial .app-desc .v-md-editor-preview,
+body.hs-dark .app-detial .app-desc .v-md-editor__preview-wrapper,
+body.hs-dark .app-detial .app-desc .github-markdown-body,
+body.hs-dark .app-detial .app-desc .vuepress-markdown-body,
+body.hs-dark .app-detial .app-desc [class*="markdown"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #eef1f4 !important;
+  box-shadow: none !important;
+}
+
+body.hs-dark .app-detial .app-desc *,
+body.hs-dark .app-detial .app-desc .github-markdown-body * {
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+body.hs-dark .app-detial .app-desc a {
+  color: #7eb0ff !important;
+}
+
+body.hs-dark .app-detial .app-desc code,
+body.hs-dark .app-detial .app-desc pre {
+  background: rgba(20,23,27,.75) !important;
+  color: #f3f5f7 !important;
+}
+
+/* ---------------------------------------------------------
+   INSTALL BUTTON - actual custom install structure
+   --------------------------------------------------------- */
+
+body.hs-dark .app-detial .custom-install-button,
+body.hs-dark .app-detial .custom-install-button.button,
+body.hs-dark .app-detial .description .button.is-primary {
+  background: #3273dc !important;
+  border-color: #3273dc !important;
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .app-detial .custom-install-button-content,
+body.hs-dark .app-detial .custom-install-dropdown-trigger,
+body.hs-dark .app-detial .description .button.is-primary *,
+body.hs-dark .app-detial .custom-install-button * {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .app-detial .custom-install-button:hover,
+body.hs-dark .app-detial .description .button.is-primary:hover {
+  background: #3e7be2 !important;
+  border-color: #3e7be2 !important;
+  color: #fff !important;
+}
+
+body.hs-dark .app-detial .custom-install-button:active,
+body.hs-dark .app-detial .custom-install-button:focus,
+body.hs-dark .app-detial .description .button.is-primary:active,
+body.hs-dark .app-detial .description .button.is-primary:focus {
+  background: #2868c7 !important;
+  border-color: #2868c7 !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 2px rgba(50,115,220,.22) !important;
+}
+
+/* Disabled install stays readable instead of washed out */
+body.hs-dark .app-detial .custom-install-button[disabled],
+body.hs-dark .app-detial .description .button.is-primary[disabled] {
+  background: #3f4a59 !important;
+  border-color: #4c5868 !important;
+  color: #dfe4e9 !important;
+  opacity: .82 !important;
+}
+
+/* Custom Install hover/click dropdown */
+body.hs-dark .app-detial .description .dropdown-content {
+  background: #2f3237 !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+body.hs-dark .app-detial .description .dropdown-content .button,
+body.hs-dark .app-detial .description .dropdown-content .dropdown-item {
+  color: #eef1f4 !important;
+}
+
+/* ---------------------------------------------------------
+   APP STORE FILTER DROPDOWN
+   --------------------------------------------------------- */
+
+body.hs-dark .app-panel .app-select .dropdown-content {
+  background: #2f3237 !important;
+  color: #eef1f4 !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+body.hs-dark .app-panel .app-select a.dropdown-item {
+  background: transparent !important;
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .app-panel .app-select a.dropdown-item:hover,
+body.hs-dark .app-panel .app-select a.dropdown-item:focus,
+body.hs-dark .app-panel .app-select a.dropdown-item:active,
+body.hs-dark .app-panel .app-select a.dropdown-item.is-active {
+  background: rgba(255,255,255,.09) !important;
+  color: #fff !important;
+}
+
+/* ---------------------------------------------------------
+   TERMINAL CARD - ACTUAL CASAOS COMPONENT
+   LogsCard always uses .fdark-bg.
+   TerminalCard switches:
+      connected = .fdark-bg
+      login     = .flight-bg
+   In dark mode only, make .flight-bg match the same translucent shell.
+   --------------------------------------------------------- */
+
+/* Undo broad terminal-shell painting from earlier versions */
+body.hs-dark .hs-terminal-shell,
+body.hs-dark .hs-terminal-shell > div,
+body.hs-dark .hs-terminal-shell > section,
+body.hs-dark .hs-terminal-shell .animation-content,
+body.hs-dark .hs-terminal-shell .modal-content {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Match Logs' visual treatment while Terminal is at its login screen */
+body.hs-dark .hs-terminal-shell .fullScreen.flight-bg,
+body.hs-dark .fullScreen.flight-bg:has(#terminal) {
+  background: rgba(29,32,36,.72) !important;
+  color: #eef1f4 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* The actual login card inside #terminal */
+body.hs-dark #terminal > .card,
+body.hs-dark #terminal .card.card-shadow {
+  background: rgba(47,50,55,.72) !important;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18) !important;
+  color: #eef1f4 !important;
+}
+
+body.hs-dark #terminal .card-content,
+body.hs-dark #terminal .content {
+  background: transparent !important;
+  color: #eef1f4 !important;
+}
+
+body.hs-dark #terminal .label,
+body.hs-dark #terminal label,
+body.hs-dark #terminal .help {
+  color: #eef1f4 !important;
+}
+
+body.hs-dark #terminal input.input {
+  background: rgba(24,27,31,.86) !important;
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.12) !important;
+  box-shadow: none !important;
+}
+
+body.hs-dark #terminal input.input:focus {
+  border-color: #3273dc !important;
+  box-shadow: 0 0 0 2px rgba(50,115,220,.18) !important;
+}
+
+/* Connect button */
+body.hs-dark #terminal .button.is-primary {
+  background: #3273dc !important;
+  border-color: #3273dc !important;
+  color: #fff !important;
+}
+
+body.hs-dark #terminal .button.is-primary:hover {
+  background: #3e7be2 !important;
+}
+
+/*
+ * IMPORTANT:
+ * Do NOT theme #logs, .logs or LogsCard here.
+ * Logs has its own component-specific styling.
+ */
+
+
+/* =========================================================
+   FRONT STORE BUTTON / NAV PRESS / CLOSE / LOGS MATCH
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   APP STORE FRONT PAGE INSTALL BUTTONS
+   The store list uses ordinary primary buttons, not the
+   .custom-install-button used by AppDetailInfo.
+   --------------------------------------------------------- */
+
+body.hs-dark .app-panel ._stepStoreList .button.is-primary,
+body.hs-dark .app-panel .featured-app .button.is-primary,
+body.hs-dark .app-panel .app-item .button.is-primary,
+body.hs-dark .app-panel .button.is-primary {
+  background-color: #3273dc !important;
+  border-color: #3273dc !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .app-panel ._stepStoreList .button.is-primary *,
+body.hs-dark .app-panel .featured-app .button.is-primary *,
+body.hs-dark .app-panel .app-item .button.is-primary *,
+body.hs-dark .app-panel .button.is-primary * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .app-panel .button.is-primary:hover {
+  background-color: #3e7be2 !important;
+  border-color: #3e7be2 !important;
+  color: #ffffff !important;
+}
+
+body.hs-dark .app-panel .button.is-primary:active,
+body.hs-dark .app-panel .button.is-primary:focus,
+body.hs-dark .app-panel .button.is-primary:focus-visible {
+  background-color: #2868c7 !important;
+  border-color: #2868c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(50,115,220,.22) !important;
+  outline: none !important;
+}
+
+/* ---------------------------------------------------------
+   TOP NAV DROPDOWN - REMOVE WHITE PRESS/CLICK FLASH
+   CasaOS settings rows are .hover-effect / ._box.
+   --------------------------------------------------------- */
+
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect,
+body.hs-dark .navbar.top-bar .dropdown-content ._box,
+body.hs-dark .navbar.top-bar .dropdown-content [role="button"],
+body.hs-dark .navbar.top-bar .dropdown-content .is-clickable {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+}
+
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:hover {
+  background-color: rgba(255,255,255,.07) !important;
+}
+
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:active,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:focus,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:focus-within,
+body.hs-dark .navbar.top-bar .dropdown-content ._box:active,
+body.hs-dark .navbar.top-bar .dropdown-content ._box:focus,
+body.hs-dark .navbar.top-bar .dropdown-content [role="button"]:active,
+body.hs-dark .navbar.top-bar .dropdown-content [role="button"]:focus,
+body.hs-dark .navbar.top-bar .dropdown-content .is-clickable:active {
+  background-color: rgba(255,255,255,.10) !important;
+  color: #ffffff !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Prevent nested controls from painting their own white click state */
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:active *,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:focus-within *,
+body.hs-dark .navbar.top-bar .dropdown-content ._box:active * {
+  color: inherit !important;
+}
+
+/* Buefy/Bulma focus/active state inside nav dropdowns */
+body.hs-dark .navbar.top-bar .dropdown-content .button:not(.is-primary):active,
+body.hs-dark .navbar.top-bar .dropdown-content .button:not(.is-primary):focus,
+body.hs-dark .navbar.top-bar .dropdown-content .button:not(.is-primary):focus-visible {
+  background-color: rgba(255,255,255,.10) !important;
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,.12) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ---------------------------------------------------------
+   CLOSE / X CONTROLS - RED IN DARK MODE
+   --------------------------------------------------------- */
+
+body.hs-dark .close-button,
+body.hs-dark .modal-close,
+body.hs-dark .delete,
+body.hs-dark [class*="close-button"] {
+  color: #ff7070 !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .close-button *,
+body.hs-dark .modal-close *,
+body.hs-dark .delete *,
+body.hs-dark [class*="close-button"] * {
+  color: #ff7070 !important;
+  fill: currentColor !important;
+  stroke: currentColor;
+}
+
+body.hs-dark .close-button:hover,
+body.hs-dark .modal-close:hover,
+body.hs-dark .delete:hover,
+body.hs-dark [class*="close-button"]:hover {
+  color: #ff9a9a !important;
+  background-color: rgba(255,80,80,.09) !important;
+}
+
+body.hs-dark .close-button:active,
+body.hs-dark .modal-close:active,
+body.hs-dark .delete:active,
+body.hs-dark [class*="close-button"]:active {
+  color: #ffc0c0 !important;
+  background-color: rgba(255,80,80,.14) !important;
+  outline: none !important;
+}
+
+/* ---------------------------------------------------------
+   LOGS - MATCH THE TERMINAL GLASS TREATMENT
+   LogsCard itself uses .fullScreen.fdark-bg and #logs.
+   --------------------------------------------------------- */
+
+body.hs-dark .fullScreen.fdark-bg:has(#logs),
+body.hs-dark .hs-terminal-shell .fullScreen.fdark-bg:has(#logs) {
+  background: rgba(29,32,36,.72) !important;
+  color: #eef1f4 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+body.hs-dark #logs,
+body.hs-dark #logs.logs {
+  background: rgba(24,27,31,.42) !important;
+  color: #eef1f4 !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  border-radius: 8px !important;
+}
+
+body.hs-dark #logs .content,
+body.hs-dark #logs .content * {
+  color: #eef1f4 !important;
+}
+
+/* Keep terminal connected view visually aligned as well */
+body.hs-dark .fullScreen.fdark-bg:has(#xterm),
+body.hs-dark .hs-terminal-shell .fullScreen.fdark-bg:has(#xterm) {
+  background: rgba(29,32,36,.72) !important;
+  color: #eef1f4 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+
+/* =========================================================
+   TERMINAL LOGIN CLEANUP
+   ========================================================= */
+
+/*
+ * Terminal login must use the same translucent shell as Logs.
+ * The script resets detected login fields on their first processing pass;
+ * browser autofill may populate them again afterwards.
+ */
+body.hs-dark .fullScreen.flight-bg:has(#terminal),
+body.hs-dark .hs-terminal-shell .fullScreen.flight-bg {
+  background: rgba(29,32,36,.72) !important;
+  color: #eef1f4 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* Remove the heavier grey slab from the terminal login card. */
+body.hs-dark #terminal > .card,
+body.hs-dark #terminal .card.card-shadow,
+body.hs-dark #terminal .hs-terminal-login-card {
+  background: rgba(24,27,31,.42) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  box-shadow: none !important;
+  color: #eef1f4 !important;
+}
+
+/* Login fields: no black/ghost characters. */
+body.hs-dark #terminal input.input,
+body.hs-dark #terminal input[type="text"],
+body.hs-dark #terminal input[type="password"],
+body.hs-dark #terminal input[type="number"] {
+  background: rgba(24,27,31,.42) !important;
+  color: #eef1f4 !important;
+  caret-color: #eef1f4 !important;
+  -webkit-text-fill-color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.10) !important;
+  box-shadow: none !important;
+}
+
+/* Placeholder stays subtle instead of appearing as entered black text. */
+body.hs-dark #terminal input::placeholder {
+  color: rgba(238,241,244,.45) !important;
+  -webkit-text-fill-color: rgba(238,241,244,.45) !important;
+  opacity: 1 !important;
+}
+
+/* Saved browser values remain readable, but do not get a white/yellow box. */
+body.hs-dark #terminal input:-webkit-autofill,
+body.hs-dark #terminal input:-webkit-autofill:hover,
+body.hs-dark #terminal input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #eef1f4 !important;
+  caret-color: #eef1f4 !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(24,27,31,.96) inset !important;
+  box-shadow: 0 0 0 1000px rgba(24,27,31,.96) inset !important;
+  transition: background-color 99999s ease-out 0s !important;
+}
+
+/* Connected terminal viewport follows the same shell transparency too. */
+body.hs-dark .fullScreen.fdark-bg:has(#xterm),
+body.hs-dark .fullScreen.fdark-bg:has(#terminal) {
+  background: rgba(29,32,36,.72) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+
+/* =========================================================
+   APP COUNT BUTTON + TERMINAL MATCHES LOGS
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   APP STORE "123 apps" SOURCE BUTTON
+   This is AppStoreSourceManagement's .source-dropdown trigger.
+   --------------------------------------------------------- */
+
+body.hs-dark .app-panel .source-dropdown .dropdown-trigger .button,
+body.hs-dark .app-panel .source-dropdown > .dropdown-trigger .button,
+body.hs-dark .app-panel .source-dropdown button.button {
+  background: #3273dc !important;
+  border-color: #3273dc !important;
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .app-panel .source-dropdown .dropdown-trigger .button *,
+body.hs-dark .app-panel .source-dropdown button.button * {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .app-panel .source-dropdown .dropdown-trigger .button:hover,
+body.hs-dark .app-panel .source-dropdown button.button:hover {
+  background: #3e7be2 !important;
+  border-color: #3e7be2 !important;
+  color: #fff !important;
+}
+
+body.hs-dark .app-panel .source-dropdown .dropdown-trigger .button:active,
+body.hs-dark .app-panel .source-dropdown .dropdown-trigger .button:focus,
+body.hs-dark .app-panel .source-dropdown button.button:active,
+body.hs-dark .app-panel .source-dropdown button.button:focus {
+  background: #2868c7 !important;
+  border-color: #2868c7 !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 2px rgba(50,115,220,.22) !important;
+  outline: none !important;
+}
+
+/* ---------------------------------------------------------
+   TERMINAL LOGIN - MATCH LOGS, WITHOUT BLUR
+   Logs already looks right, so copy its translucent surface
+   treatment instead of using backdrop blur on Terminal.
+   --------------------------------------------------------- */
+
+/* Remove blur from Terminal only. */
+body.hs-dark .fullScreen.flight-bg:has(#terminal),
+body.hs-dark .fullScreen.fdark-bg:has(#terminal),
+body.hs-dark .fullScreen.fdark-bg:has(#xterm),
+body.hs-dark .hs-terminal-shell .fullScreen.flight-bg:has(#terminal) {
+  background: rgba(29,32,36,.72) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* #terminal gets the same visible translucent pane as #logs. */
+body.hs-dark #terminal {
+  background: rgba(24,27,31,.42) !important;
+  color: #eef1f4 !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  border-radius: 8px !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Don't add a second opaque/blurred layer inside Terminal. */
+body.hs-dark #terminal > .card,
+body.hs-dark #terminal .card.card-shadow,
+body.hs-dark #terminal .hs-terminal-login-card,
+body.hs-dark #terminal .card-content,
+body.hs-dark #terminal .content {
+  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep form controls readable without changing the pane itself. */
+body.hs-dark #terminal input.input,
+body.hs-dark #terminal input[type="text"],
+body.hs-dark #terminal input[type="password"],
+body.hs-dark #terminal input[type="number"] {
+  background: rgba(15,18,22,.45) !important;
+  color: #eef1f4 !important;
+  -webkit-text-fill-color: #eef1f4 !important;
+  caret-color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.10) !important;
+  box-shadow: none !important;
+}
+
+/* Saved/autofilled values stay dark and readable. */
+body.hs-dark #terminal input:-webkit-autofill,
+body.hs-dark #terminal input:-webkit-autofill:hover,
+body.hs-dark #terminal input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #eef1f4 !important;
+  caret-color: #eef1f4 !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(15,18,22,.92) inset !important;
+  box-shadow: 0 0 0 1000px rgba(15,18,22,.92) inset !important;
+}
+
+
+/* =========================================================
+   DARK DROPDOWN HOVER CONTRAST
+   ========================================================= */
+
+/*
+ * Make hovered / focused dropdown rows clearly distinguishable.
+ * Brighter text + stronger grey background so labels don't blend in.
+ */
+body.hs-dark .dropdown-content .dropdown-item:hover,
+body.hs-dark .dropdown-content .dropdown-item:focus,
+body.hs-dark .dropdown-content .dropdown-item:focus-visible,
+body.hs-dark .dropdown-content .dropdown-item.is-active,
+body.hs-dark .dropdown-content .dropdown-item.is-selected,
+body.hs-dark .dropdown-content a.dropdown-item:hover,
+body.hs-dark .dropdown-content a.dropdown-item:focus,
+body.hs-dark .dropdown-content a.dropdown-item:focus-visible,
+body.hs-dark .dropdown-content a.dropdown-item.is-active,
+body.hs-dark .dropdown-content a.dropdown-item.is-selected,
+body.hs-dark .dropdown-content button.dropdown-item:hover,
+body.hs-dark .dropdown-content button.dropdown-item:focus,
+body.hs-dark .dropdown-content button.dropdown-item:focus-visible,
+body.hs-dark .dropdown-content button.dropdown-item.is-active,
+body.hs-dark .dropdown-content button.dropdown-item.is-selected {
+  background-color: rgba(255,255,255,.16) !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 1px rgba(0,0,0,.25);
+  outline: none !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) !important;
+}
+
+/* Force all nested text/icons in hovered rows to become bright too. */
+body.hs-dark .dropdown-content .dropdown-item:hover *,
+body.hs-dark .dropdown-content .dropdown-item:focus *,
+body.hs-dark .dropdown-content .dropdown-item.is-active *,
+body.hs-dark .dropdown-content .dropdown-item.is-selected *,
+body.hs-dark .dropdown-content a.dropdown-item:hover *,
+body.hs-dark .dropdown-content a.dropdown-item:focus *,
+body.hs-dark .dropdown-content a.dropdown-item.is-active *,
+body.hs-dark .dropdown-content a.dropdown-item.is-selected *,
+body.hs-dark .dropdown-content button.dropdown-item:hover *,
+body.hs-dark .dropdown-content button.dropdown-item:focus *,
+body.hs-dark .dropdown-content button.dropdown-item.is-active *,
+body.hs-dark .dropdown-content button.dropdown-item.is-selected * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  fill: currentColor !important;
+  stroke: currentColor;
+}
+
+/* CasaOS custom dropdown row classes */
+body.hs-dark .dropdown-content ._dropdown__item:hover,
+body.hs-dark .dropdown-content ._dropdown__item:focus,
+body.hs-dark .dropdown-content ._dropdown__item.is-active,
+body.hs-dark .dropdown-content .hover-effect:hover {
+  background-color: rgba(255,255,255,.16) !important;
+  color: #ffffff !important;
+}
+
+/* Settings rows in navbar dropdown should also pop more on hover */
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:hover,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:focus-within {
+  background-color: rgba(255,255,255,.14) !important;
+  color: #ffffff !important;
+}
+
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:hover *,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect:focus-within * {
+  color: #ffffff !important;
+}
+
+
+/* =========================================================
+   SETTINGS SELECT + TERMINAL/LOGS GLASS MATCH
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   SETTINGS SEARCH ENGINE / LANGUAGE
+   Hide the native Firefox select UI once JS has upgraded it.
+   --------------------------------------------------------- */
+
+.navbar.top-bar .set-select select.hs-custom-select-native {
+  display: none !important;
+}
+
+/* Exact CasaOS settings select shell */
+body.hs-dark .navbar.top-bar .set-select,
+body.hs-dark .navbar.top-bar .set-select .select {
+  color: #eef1f4 !important;
+}
+
+/* Custom replacement trigger */
+body.hs-dark .navbar.top-bar .set-select .hs-custom-select-button,
+body.hs-dark .hs-settings-panel .hs-custom-select-button {
+  background: #2f3237 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: none !important;
+}
+
+/* Custom replacement popup */
+body.hs-dark .navbar.top-bar .set-select .hs-custom-select-menu,
+body.hs-dark .hs-settings-panel .hs-custom-select-menu {
+  background: #2f3237 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: 0 14px 36px rgba(0,0,0,.35) !important;
+}
+
+/* Options */
+body.hs-dark .navbar.top-bar .set-select .hs-custom-select-option,
+body.hs-dark .hs-settings-panel .hs-custom-select-option {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+body.hs-dark .navbar.top-bar .set-select .hs-custom-select-option:hover,
+body.hs-dark .navbar.top-bar .set-select .hs-custom-select-option:focus,
+body.hs-dark .navbar.top-bar .set-select .hs-custom-select-option:active,
+body.hs-dark .navbar.top-bar .set-select .hs-custom-select-option.is-selected,
+body.hs-dark .hs-settings-panel .hs-custom-select-option:hover,
+body.hs-dark .hs-settings-panel .hs-custom-select-option:focus,
+body.hs-dark .hs-settings-panel .hs-custom-select-option:active,
+body.hs-dark .hs-settings-panel .hs-custom-select-option.is-selected {
+  background: rgba(255,255,255,.16) !important;
+  color: #ffffff !important;
+  outline: none !important;
+}
+
+/* ---------------------------------------------------------
+   TERMINAL + LOGS
+   Use the SAME dark glass + blur on both tabs.
+   --------------------------------------------------------- */
+
+body.hs-dark .fullScreen.flight-bg:has(#terminal),
+body.hs-dark .fullScreen.fdark-bg:has(#terminal),
+body.hs-dark .fullScreen.fdark-bg:has(#xterm),
+body.hs-dark .fullScreen.fdark-bg:has(#logs) {
+  background: rgba(29,32,36,.72) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  color: #eef1f4 !important;
+}
+
+/* Same inner translucent pane for both tabs */
+body.hs-dark #terminal,
+body.hs-dark #logs {
+  background: rgba(24,27,31,.42) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  border-radius: 8px !important;
+  color: #eef1f4 !important;
+}
+
+/* Terminal login card should not add another opaque slab */
+body.hs-dark #terminal > .card,
+body.hs-dark #terminal .card.card-shadow,
+body.hs-dark #terminal .card-content,
+body.hs-dark #terminal .content {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Keep Logs content transparent inside its glass pane */
+body.hs-dark #logs .content {
+  background: transparent !important;
+  color: #eef1f4 !important;
+}
+
+
+/* =========================================================
+   SELECT ARROWS + GLASS MODAL + NAV EXCLUSIVITY
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   CUSTOM SELECT ARROWS
+   Use currentColor so arrows work in BOTH themes.
+   --------------------------------------------------------- */
+
+.hs-custom-select-button {
+  color: inherit !important;
+}
+
+.hs-custom-select-button::after {
+  border-right-color: currentColor !important;
+  border-bottom-color: currentColor !important;
+  opacity: .9 !important;
+}
+
+body.hs-dark .hs-custom-select-button {
+  color: #ffffff !important;
+}
+
+body.hs-light .hs-custom-select-button {
+  color: #111820 !important;
+}
+
+/* Hide any native/Buefy select arrow still left behind after upgrade. */
+.navbar.top-bar .set-select .select::after,
+.navbar.top-bar .set-select.select::after {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------
+   TERMINAL & LOGS MODAL GLASS
+   Theme the OUTER modal/card, not just the tab contents.
+   --------------------------------------------------------- */
+
+body.hs-dark .terminal-modal .modal-card,
+body.hs-dark .terminal-modal .modal-card-body,
+body.hs-dark .terminal-modal .modal-card-head,
+body.hs-dark .terminal-modal .modal-card-foot,
+body.hs-dark .terminal-modal .modal-content {
+  background: rgba(29,32,36,.72) !important;
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.08) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* Keep the tab content transparent so the outer glass is visible. */
+body.hs-dark .terminal-modal .tab-content,
+body.hs-dark .terminal-modal .tab-item,
+body.hs-dark .terminal-modal .tabs-content {
+  background: transparent !important;
+}
+
+/* Same inner treatment for Terminal and Logs. */
+body.hs-dark .terminal-modal #terminal,
+body.hs-dark .terminal-modal #logs {
+  background: rgba(24,27,31,.36) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  border-radius: 8px !important;
+  color: #eef1f4 !important;
+}
+
+/* Active/inactive tab labels stay readable. */
+body.hs-dark .terminal-modal .tabs a {
+  color: #bfc6ce !important;
+}
+
+body.hs-dark .terminal-modal .tabs li.is-active a {
+  color: #ffffff !important;
+  border-bottom-color: #3273dc !important;
+}
+
+/* Close X remains red */
+body.hs-dark .terminal-modal .delete,
+body.hs-dark .terminal-modal .close-button {
+  color: #ff7070 !important;
+}
+
+
+/* =========================================================
+   TERMINAL DEFAULT PORT + EXACT LOGS GLASS MATCH
+   ========================================================= */
+
+/*
+ * Terminal and Logs now share the exact same glass pane.
+ * Same opacity, same blur, same border, same radius.
+ */
+body.hs-dark .terminal-modal #terminal,
+body.hs-dark .terminal-modal #logs,
+body.hs-dark #terminal,
+body.hs-dark #logs {
+  background: rgba(24,27,31,.42) !important;
+  color: #eef1f4 !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* Both tab shells use the same outer blur too. */
+body.hs-dark .fullScreen.flight-bg:has(#terminal),
+body.hs-dark .fullScreen.fdark-bg:has(#terminal),
+body.hs-dark .fullScreen.fdark-bg:has(#xterm),
+body.hs-dark .fullScreen.fdark-bg:has(#logs) {
+  background: rgba(29,32,36,.72) !important;
+  color: #eef1f4 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/*
+ * Terminal login card remains visually integrated into the glass pane,
+ * instead of adding a second opaque slab.
+ */
+body.hs-dark #terminal > .card,
+body.hs-dark #terminal .card.card-shadow,
+body.hs-dark #terminal .card-content,
+body.hs-dark #terminal .content {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Keep login inputs readable on top of the glass. */
+body.hs-dark #terminal input.input,
+body.hs-dark #terminal input[type="text"],
+body.hs-dark #terminal input[type="password"],
+body.hs-dark #terminal input[type="number"] {
+  background: rgba(15,18,22,.58) !important;
+  color: #eef1f4 !important;
+  -webkit-text-fill-color: #eef1f4 !important;
+  caret-color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.10) !important;
+  box-shadow: none !important;
+}
+
+
+/* =========================================================
+   APP STORE TITLE DARK MODE ONLY
+   ========================================================= */
+
+/*
+ * App Store title/header text.
+ * Dark mode only - light theme keeps CasaOS' original styling.
+ */
+body.hs-dark .app-panel .modal-card-head .modal-card-title,
+body.hs-dark .app-panel .modal-card-head .title,
+body.hs-dark .app-panel .modal-card-head h1,
+body.hs-dark .app-panel .modal-card-head h2,
+body.hs-dark .app-panel .modal-card-head h3,
+body.hs-dark .app-panel .modal-card-head p,
+body.hs-dark .app-panel .modal-card-head span {
+  color: #eef1f4 !important;
+}
+
+
+/* =========================================================
+   DARK NAVBAR / TERMINAL TINT / ATTENTION HOVERS
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   DARK MODE TOP NAVBAR
+   Darker, cleaner surface to match the rest of the dark UI.
+   --------------------------------------------------------- */
+
+body.hs-dark .navbar.top-bar {
+  background: rgba(28, 31, 36, .96) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,.28) !important;
+  color: #f3f5f7 !important;
+}
+
+body.hs-dark .navbar.top-bar .navbar-item,
+body.hs-dark .navbar.top-bar .picon,
+body.hs-dark .navbar.top-bar .icon,
+body.hs-dark .navbar.top-bar .icon *,
+body.hs-dark .navbar.top-bar svg,
+body.hs-dark .navbar.top-bar i {
+  color: #f3f5f7 !important;
+}
+
+/* The two HomeServer buttons should visually belong to the same navbar. */
+body.hs-dark .hs-toolbar-button {
+  background: rgba(255,255,255,.05) !important;
+  border-color: rgba(255,255,255,.09) !important;
+  color: #f3f5f7 !important;
+  box-shadow: none !important;
+}
+
+body.hs-dark .hs-toolbar-button:hover,
+body.hs-dark .navbar.top-bar .navbar-item:hover {
+  background: rgba(255,255,255,.09) !important;
+}
+
+/* ---------------------------------------------------------
+   TERMINAL TAB - MATCH THE DARKER LOGS TINT
+   --------------------------------------------------------- */
+
+/*
+ * The screenshots show Logs with a noticeably darker/tinted pane.
+ * Give Terminal the same tinted glass instead of the lighter panel.
+ */
+body.hs-dark .terminal-modal #terminal,
+body.hs-dark #terminal {
+  background: rgba(12, 15, 19, .72) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+  border-radius: 8px !important;
+  color: #eef1f4 !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* Keep the terminal shell itself dark/tinted too. */
+body.hs-dark .fullScreen.flight-bg:has(#terminal),
+body.hs-dark .fullScreen.fdark-bg:has(#terminal),
+body.hs-dark .fullScreen.fdark-bg:has(#xterm) {
+  background: rgba(16, 19, 23, .72) !important;
+  color: #eef1f4 !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* The login card must not add a brighter grey rectangle. */
+body.hs-dark #terminal > .card,
+body.hs-dark #terminal .card.card-shadow,
+body.hs-dark #terminal .card-content,
+body.hs-dark #terminal .content {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Inputs remain distinct but still dark. */
+body.hs-dark #terminal input.input,
+body.hs-dark #terminal input[type="text"],
+body.hs-dark #terminal input[type="password"],
+body.hs-dark #terminal input[type="number"] {
+  background: rgba(8, 11, 14, .54) !important;
+  color: #eef1f4 !important;
+  -webkit-text-fill-color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+/* ---------------------------------------------------------
+   SETTINGS - SHUTDOWN ATTENTION STATE
+   Never let generic hover rules wash the red state out.
+   --------------------------------------------------------- */
+
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect-attention,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect-attention *,
+body.hs-dark .navbar.top-bar .dropdown-content ._has-text-attention,
+body.hs-dark .navbar.top-bar .dropdown-content ._has-text-attention * {
+  color: #ff7070 !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect-attention:hover,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect-attention:focus,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect-attention:active {
+  background: rgba(255, 88, 88, .12) !important;
+  color: #ff8b8b !important;
+}
+
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect-attention:hover *,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect-attention:focus *,
+body.hs-dark .navbar.top-bar .dropdown-content .hover-effect-attention:active * {
+  color: #ff8b8b !important;
+  opacity: 1 !important;
+}
+
+/* ---------------------------------------------------------
+   ACCOUNT - KEEP LOGOUT RED EVEN WHILE OTHER ITEMS HOVER
+   --------------------------------------------------------- */
+
+body.hs-dark .hs-account-panel .hs-logout,
+body.hs-dark .hs-account-panel .hs-logout *,
+body.hs-dark .dropdown-content .hs-account-panel .hs-logout,
+body.hs-dark .dropdown-content .hs-account-panel .hs-logout * {
+  color: #ff7070 !important;
+  opacity: 1 !important;
+}
+
+/* Ancestor hover/focus must not turn Logout white/grey. */
+body.hs-dark .hs-account-panel:hover .hs-logout,
+body.hs-dark .hs-account-panel:hover .hs-logout *,
+body.hs-dark .hs-account-panel:focus-within .hs-logout,
+body.hs-dark .hs-account-panel:focus-within .hs-logout *,
+body.hs-dark .dropdown-content:hover .hs-logout,
+body.hs-dark .dropdown-content:hover .hs-logout * {
+  color: #ff7070 !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .hs-account-panel .hs-logout:hover,
+body.hs-dark .dropdown-content .hs-logout:hover {
+  background: rgba(255, 88, 88, .12) !important;
+  color: #ff9a9a !important;
+}
+
+body.hs-dark .hs-account-panel .hs-logout:hover *,
+body.hs-dark .dropdown-content .hs-logout:hover * {
+  color: #ff9a9a !important;
+}
+
+
+/* =========================================================
+   FIREFOX AUTOFILL + CONSISTENT TERMINAL/LOGS BACKDROP
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   TERMINAL LOGIN FIELDS
+   Firefox/browser autofill is what paints the yellow fields.
+   Force autofilled values onto the dark terminal palette.
+   --------------------------------------------------------- */
+
+body.hs-dark #terminal input,
+body.hs-dark #terminal .input {
+  color-scheme: dark !important;
+  background-color: rgba(8, 11, 14, .72) !important;
+  color: #eef1f4 !important;
+  -webkit-text-fill-color: #eef1f4 !important;
+  caret-color: #eef1f4 !important;
+}
+
+/* Chromium/WebKit autofill */
+body.hs-dark #terminal input:-webkit-autofill,
+body.hs-dark #terminal input:-webkit-autofill:hover,
+body.hs-dark #terminal input:-webkit-autofill:focus,
+body.hs-dark #terminal input:-webkit-autofill:active {
+  -webkit-text-fill-color: #eef1f4 !important;
+  caret-color: #eef1f4 !important;
+  -webkit-box-shadow: 0 0 0 1000px #11151a inset !important;
+  box-shadow: 0 0 0 1000px #11151a inset !important;
+  border-color: rgba(255,255,255,.10) !important;
+  transition: background-color 99999s ease-out 0s !important;
+}
+
+/* Firefox autofill */
+body.hs-dark #terminal input:-moz-autofill,
+body.hs-dark #terminal input:-moz-autofill:focus {
+  background-color: #11151a !important;
+  color: #eef1f4 !important;
+  box-shadow: 0 0 0 1000px #11151a inset !important;
+  border-color: rgba(255,255,255,.10) !important;
+  filter: none !important;
+}
+
+/* Firefox number input / port remains dark as well */
+body.hs-dark #terminal input[type="number"] {
+  background-color: #11151a !important;
+  color: #eef1f4 !important;
+  -webkit-text-fill-color: #eef1f4 !important;
+}
+
+/* ---------------------------------------------------------
+   TERMINAL & LOGS MODAL BACKDROP
+   Make the PAGE BEHIND the modal use the same dim/blur on
+   BOTH tabs. This is what makes Logs look darker/glassier.
+   --------------------------------------------------------- */
+
+body.hs-dark .modal:has(.terminal-modal) .modal-background {
+  background: rgba(4, 7, 11, .48) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+/*
+ * If CasaOS mounts TerminalPanel without .terminal-modal on an
+ * ancestor, catch the actual terminal/log content instead.
+ */
+body.hs-dark .modal:has(#terminal) .modal-background,
+body.hs-dark .modal:has(#logs) .modal-background {
+  background: rgba(4, 7, 11, .48) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+/* Outer Terminal & Logs card remains the same on either tab. */
+body.hs-dark .terminal-modal .modal-card,
+body.hs-dark .modal:has(#terminal) .modal-card,
+body.hs-dark .modal:has(#logs) .modal-card {
+  background: rgba(27, 30, 35, .90) !important;
+  border-color: rgba(255,255,255,.08) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+
+/* =========================================================
+   LOGS DOWNLOAD TOOLTIP TEXT CLARITY
+   ========================================================= */
+
+/*
+ * The "Download Logs" tooltip/label should stay sharp.
+ * Do not let the surrounding glass blur affect the tooltip text.
+ */
+body.hs-dark .terminal-modal .tooltip-content,
+body.hs-dark .terminal-modal .b-tooltip .tooltip-content,
+body.hs-dark .terminal-modal [role="tooltip"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+  color: #ffffff !important;
+  background: rgba(24,27,31,.98) !important;
+}
+
+/* Ensure inner text/icons are also crisp and fully opaque. */
+body.hs-dark .terminal-modal .tooltip-content *,
+body.hs-dark .terminal-modal .b-tooltip .tooltip-content *,
+body.hs-dark .terminal-modal [role="tooltip"] * {
+  filter: none !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+  color: #ffffff !important;
+}
+
+/*
+ * If the label is rendered as a sibling/child under the download icon,
+ * keep that text outside any inherited blur/filter.
+ */
+body.hs-dark .terminal-modal .download,
+body.hs-dark .terminal-modal [class*="download"] {
+  filter: none !important;
+}
+
+body.hs-dark .terminal-modal .download *,
+body.hs-dark .terminal-modal [class*="download"] * {
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+
+/* =========================================================
+   EXACT DOWNLOAD LOGS TOOLTIP + REMOVE NAV TOGGLE
+   ========================================================= */
+
+/*
+ * CasaOS TerminalPanel uses:
+ *   <b-tooltip label="Download logs" type="is-black" ...>
+ *
+ * Target the actual Buefy tooltip rather than the surrounding
+ * Terminal/Logs glass card.
+ */
+body.hs-dark .b-tooltip.is-black .tooltip-content,
+body.hs-dark .terminal-modal .b-tooltip.is-black .tooltip-content {
+  background: #0d1117 !important;
+  background-color: #0d1117 !important;
+  color: #ffffff !important;
+
+  opacity: 1 !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  text-shadow: none !important;
+  font-weight: 500 !important;
+
+  border: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: 0 8px 22px rgba(0,0,0,.32) !important;
+}
+
+/* Make absolutely sure the tooltip's text cannot inherit blur/opacity. */
+body.hs-dark .b-tooltip.is-black .tooltip-content *,
+body.hs-dark .terminal-modal .b-tooltip.is-black .tooltip-content * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: none !important;
+}
+
+/* Buefy tooltip arrow should match the solid tooltip box. */
+body.hs-dark .b-tooltip.is-black.is-bottom .tooltip-content::before,
+body.hs-dark .b-tooltip.is-black.is-bottom .tooltip-content::after {
+  border-bottom-color: #0d1117 !important;
+}
+
+body.hs-dark .b-tooltip.is-black.is-top .tooltip-content::before,
+body.hs-dark .b-tooltip.is-black.is-top .tooltip-content::after {
+  border-top-color: #0d1117 !important;
+}
+
+/*
+ * Do not blur/filter the Buefy tooltip wrapper itself.
+ * The modal can remain glassy while the tooltip renders sharp.
+ */
+body.hs-dark .terminal-modal .b-tooltip.is-black {
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
+/* =========================================================
+   FILES APP DARK MODE
+   Uses CasaOS FilePanel.vue and ListView.vue classes.
+   ========================================================= */
+
+/* FILES LEFT SIDEBAR */
+body.hs-dark .file-panel .b-sidebar .sidebar-content,
+body.hs-dark .file-panel .sidebar-content,
+body.hs-dark .file-panel .nav-bar,
+body.hs-dark .file-panel .nav-bar-top,
+body.hs-dark .file-panel .bottom-area,
+body.hs-dark .file-panel .files-section,
+body.hs-dark .file-panel .mounted-section,
+body.hs-dark .file-panel .list-container {
+  background: #25292e !important;
+  background-color: #25292e !important;
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+body.hs-dark .file-panel .b-sidebar,
+body.hs-dark .file-panel .b-sidebar .sidebar-background {
+  background: transparent !important;
+}
+
+body.hs-dark .file-panel .nav-bar .title,
+body.hs-dark .file-panel .nav-bar h3 {
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .file-panel .nav-bar .list-item,
+body.hs-dark .file-panel .nav-bar .new-list-item,
+body.hs-dark .file-panel .nav-bar .li,
+body.hs-dark .file-panel .nav-bar .ul {
+  color: #e7ebef !important;
+}
+
+body.hs-dark .file-panel .nav-bar .list-item *,
+body.hs-dark .file-panel .nav-bar .new-list-item *,
+body.hs-dark .file-panel .nav-bar .li * {
+  color: inherit !important;
+}
+
+body.hs-dark .file-panel .nav-bar .list-item:hover,
+body.hs-dark .file-panel .nav-bar .new-list-item:hover {
+  background: rgba(255,255,255,.08) !important;
+  color: #ffffff !important;
+}
+
+body.hs-dark .file-panel .nav-bar .list-item.active,
+body.hs-dark .file-panel .nav-bar .new-list-item.active {
+  background: rgba(50,115,220,.22) !important;
+  color: #ffffff !important;
+}
+
+body.hs-dark .file-panel .nav-bar .icon,
+body.hs-dark .file-panel .nav-bar .icon *,
+body.hs-dark .file-panel .nav-bar i,
+body.hs-dark .file-panel .nav-bar svg {
+  color: #dbe2e9 !important;
+}
+
+body.hs-dark .file-panel .bottom-area {
+  border-top-color: rgba(255,255,255,.08) !important;
+}
+
+/* LIST VIEW HEADER - the white strip */
+body.hs-dark .file-panel .list-view .table-thead,
+body.hs-dark .file-panel .node-list .table-thead,
+body.hs-dark .file-panel .table-thead {
+  background: #25292e !important;
+  background-color: #25292e !important;
+  color: #dfe5eb !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+body.hs-dark .file-panel .table-thead .tr-wrapper,
+body.hs-dark .file-panel .table-thead .tr,
+body.hs-dark .file-panel .table-thead .th {
+  background: #25292e !important;
+  background-color: #25292e !important;
+  color: #dfe5eb !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+body.hs-dark .file-panel .table-thead .th *,
+body.hs-dark .file-panel .table-thead .one-line,
+body.hs-dark .file-panel .table-thead .icon {
+  color: #dfe5eb !important;
+}
+
+body.hs-dark .file-panel .table-thead .th:hover,
+body.hs-dark .file-panel .table-thead .th:active,
+body.hs-dark .file-panel .table-thead .th:focus {
+  background: rgba(255,255,255,.07) !important;
+  color: #ffffff !important;
+}
+
+/* LIST VIEW ROWS */
+body.hs-dark .file-panel .list-view .tbody,
+body.hs-dark .file-panel .list-view .card-container,
+body.hs-dark .file-panel .node-list .tbody,
+body.hs-dark .file-panel .node-list .card-container {
+  background: transparent !important;
+}
+
+body.hs-dark .file-panel .list-view .tr,
+body.hs-dark .file-panel .node-list .tbody .tr {
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.06) !important;
+}
+
+body.hs-dark .file-panel .list-view .tr:hover,
+body.hs-dark .file-panel .node-list .tbody .tr:hover {
+  background: rgba(255,255,255,.06) !important;
+}
+
+body.hs-dark .file-panel .list-view .tr.active,
+body.hs-dark .file-panel .node-list .tbody .tr.active {
+  background: rgba(50,115,220,.18) !important;
+}
+
+body.hs-dark .file-panel .list-view .text,
+body.hs-dark .file-panel .list-view .one-line,
+body.hs-dark .file-panel .node-list .tbody .text,
+body.hs-dark .file-panel .node-list .tbody .one-line {
+  color: #eef1f4 !important;
+}
+
+/* FILES HEADER */
+body.hs-dark .file-panel .modal-card-head {
+  background: #34383e !important;
+  color: #eef1f4 !important;
+  border-bottom-color: rgba(255,255,255,.08) !important;
+}
+
+body.hs-dark .file-panel .breadcrumb-container,
+body.hs-dark .file-panel .breadcrumb-container *,
+body.hs-dark .file-panel .modal-card-head .icon {
+  color: #dfe5eb !important;
+}
+
+
+/* =========================================================
+   FILES APP TRUE DARK THEME
+   Targeted to CasaOS' actual FileBrowser component classes.
+   No broad input rules: file upload controls remain untouched.
+   ========================================================= */
+
+/* Main Files shell */
+body.hs-dark .file-panel .modal-card,
+body.hs-dark .file-panel .modal-card-body,
+body.hs-dark .file-panel #dropTarget,
+body.hs-dark .file-panel .scroll-container,
+body.hs-dark .file-panel .content-components {
+  background: #2d3136 !important;
+  background-color: #2d3136 !important;
+  color: #eef1f4 !important;
+}
+
+/* ---------------------------------------------------------
+   GRID VIEW
+   CasaOS uses:
+   .grid-card > .file-card > .file-card-item >
+   .node-card-container > .outer-wrapper > .node-card
+   --------------------------------------------------------- */
+
+body.hs-dark .file-panel .grid-card,
+body.hs-dark .file-panel .file-card,
+body.hs-dark .file-panel .file-card-item,
+body.hs-dark .file-panel .node-card-container,
+body.hs-dark .file-panel .outer-wrapper {
+  background: transparent !important;
+}
+
+/* Normal grid tile */
+body.hs-dark .file-panel .grid-card .node-card {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #eef1f4 !important;
+  border-radius: 8px !important;
+  transition: background-color .15s ease !important;
+}
+
+/* Hover: dark highlight, never CasaOS white/#f8f8f8 */
+body.hs-dark .file-panel .grid-card .outer-wrapper:hover .node-card,
+body.hs-dark .file-panel .grid-card .node-card:hover {
+  background: rgba(255,255,255,.075) !important;
+  background-color: rgba(255,255,255,.075) !important;
+  color: #ffffff !important;
+}
+
+/* Selected tile: stronger dark/blue tint instead of pale white */
+body.hs-dark .file-panel .grid-card .outer-wrapper.active .node-card,
+body.hs-dark .file-panel .grid-card .outer-wrapper.active:hover .node-card {
+  background: rgba(50,115,220,.24) !important;
+  background-color: rgba(50,115,220,.24) !important;
+  color: #ffffff !important;
+}
+
+/* Filename + metadata */
+body.hs-dark .file-panel .grid-card .node-card .info,
+body.hs-dark .file-panel .grid-card .node-card .info .title {
+  color: #f4f7fa !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .file-panel .grid-card .node-card .info .desc {
+  color: #b9c1ca !important;
+  opacity: 1 !important;
+}
+
+body.hs-dark .file-panel .grid-card .outer-wrapper:hover .info .title,
+body.hs-dark .file-panel .grid-card .outer-wrapper.active .info .title {
+  color: #ffffff !important;
+}
+
+body.hs-dark .file-panel .grid-card .outer-wrapper:hover .info .desc,
+body.hs-dark .file-panel .grid-card .outer-wrapper.active .info .desc {
+  color: #d5dbe2 !important;
+}
+
+/* Grid checkbox/action controls */
+body.hs-dark .file-panel .grid-card .checkbox-container,
+body.hs-dark .file-panel .grid-card .action-button {
+  color: #eef1f4 !important;
+}
+
+/* Drag-selection rectangle */
+body.hs-dark .file-panel #selection {
+  background: rgba(50,115,220,.22) !important;
+  border-color: #5b9cff !important;
+}
+
+/* ---------------------------------------------------------
+   LIST VIEW - keep rows/header consistent with grid
+   --------------------------------------------------------- */
+
+body.hs-dark .file-panel .list-view .tr:hover,
+body.hs-dark .file-panel .node-list .tbody .tr:hover {
+  background: rgba(255,255,255,.065) !important;
+  color: #ffffff !important;
+}
+
+body.hs-dark .file-panel .list-view .tr.active,
+body.hs-dark .file-panel .node-list .tbody .tr.active {
+  background: rgba(50,115,220,.22) !important;
+  color: #ffffff !important;
+}
+
+body.hs-dark .file-panel .list-view .tr:hover *,
+body.hs-dark .file-panel .list-view .tr.active *,
+body.hs-dark .file-panel .node-list .tbody .tr:hover *,
+body.hs-dark .file-panel .node-list .tbody .tr.active * {
+  color: inherit !important;
+}
+
+/* ---------------------------------------------------------
+   FILESDROP
+   Exact CasaOS classes from DropAddButton.vue.
+   --------------------------------------------------------- */
+
+/* Circular add-device buttons */
+body.hs-dark .file-panel .drop-button {
+  background: #353a40 !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,.28) !important;
+}
+
+body.hs-dark .file-panel .drop-button .circle-area {
+  background: #353a40 !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+body.hs-dark .file-panel .drop-button .circle-area:hover {
+  background: #41474e !important;
+  border-color: rgba(255,255,255,.16) !important;
+}
+
+/* FilesDrop popup shell */
+body.hs-dark .file-panel .drop-button .drop-tips .dropdown-content {
+  background: #34393f !important;
+  background-color: #34393f !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: #eef1f4 !important;
+  box-shadow: 0 14px 34px rgba(0,0,0,.34) !important;
+}
+
+/* Popup title */
+body.hs-dark .file-panel .drop-button .drop-tips .has-text-title-06 {
+  color: #f4f7fa !important;
+  opacity: 1 !important;
+}
+
+/* The address card that was white/washed out */
+body.hs-dark .file-panel .drop-button .drop-tips .drop-grey-bg {
+  background: #25292e !important;
+  background-color: #25292e !important;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  color: #eef1f4 !important;
+}
+
+/* LAN label */
+body.hs-dark .file-panel .drop-button .drop-tips .drop-grey-bg .has-text-full-03 {
+  color: #cbd2da !important;
+  opacity: 1 !important;
+}
+
+/* IP/address text */
+body.hs-dark .file-panel .drop-button .drop-tips .drop-grey-bg .has-text-primary,
+body.hs-dark .file-panel .drop-button .drop-tips .drop-grey-bg .has-text-emphasis-03 {
+  color: #6ea8ff !important;
+  opacity: 1 !important;
+}
+
+/* FilesDrop popup arrow - match dark popup instead of white */
+body.hs-dark .file-panel .drop-button .drop-tips.is-top-left .dropdown-content::before,
+body.hs-dark .file-panel .drop-button .drop-tips.is-top-right .dropdown-content::before {
+  border-top-color: #34393f !important;
+}
+
+body.hs-dark .file-panel .drop-button .drop-tips.is-bottom-left .dropdown-content::before,
+body.hs-dark .file-panel .drop-button .drop-tips.is-bottom-right .dropdown-content::before {
+  border-bottom-color: #34393f !important;
+}
+
+body.hs-dark .file-panel .drop-button .drop-tips .dropdown-content::after {
+  opacity: .45 !important;
+}
+
+/* ---------------------------------------------------------
+   FILE CONTEXT MENUS / OPERATION POPPERS
+   --------------------------------------------------------- */
+
+body.hs-dark .file-panel .file-dropdown .dropdown-content,
+body.hs-dark .file-panel .operation-status-bar .popper {
+  background: #34393f !important;
+  background-color: #34393f !important;
+  color: #eef1f4 !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+body.hs-dark .file-panel .file-dropdown .dropdown-item {
+  background: transparent !important;
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .file-panel .file-dropdown .dropdown-item:hover,
+body.hs-dark .file-panel .file-dropdown .dropdown-item:focus,
+body.hs-dark .file-panel .file-dropdown .dropdown-item:active {
+  background: rgba(255,255,255,.08) !important;
+  color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------
+   FILE PREVIEW OVERLAY
+   CasaOS hardcodes this overlay white.
+   --------------------------------------------------------- */
+
+body.hs-dark .file-panel .overlay {
+  background: #2d3136 !important;
+  background-color: #2d3136 !important;
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .file-panel .overlay .file-path-bread,
+body.hs-dark .file-panel .overlay .v-container,
+body.hs-dark .file-panel .overlay .v-footer {
+  background: #2d3136 !important;
+  color: #eef1f4 !important;
+}
+
+/* ---------------------------------------------------------
+   FILE MODALS / UPLOAD CHOICES
+   --------------------------------------------------------- */
+
+body.hs-dark .file-modal .modal-card,
+body.hs-dark .file-modal .modal-card-head,
+body.hs-dark .file-modal .modal-card-body,
+body.hs-dark .file-modal .modal-card-foot {
+  background: #34393f !important;
+  color: #eef1f4 !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+body.hs-dark .file-modal .node-card,
+body.hs-dark .file-modal .node-card .title {
+  color: #eef1f4 !important;
+}
+
+body.hs-dark .file-panel .upload-btns li {
+  background: #34393f !important;
+  color: #eef1f4 !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+}
+
+body.hs-dark .file-panel .upload-btns li:hover {
+  background: #41474e !important;
+  color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------
+   BREADCRUMBS
+   --------------------------------------------------------- */
+
+body.hs-dark .file-panel .breadcrumb a {
+  color: #dfe5eb !important;
+}
+
+body.hs-dark .file-panel .breadcrumb a:hover {
+  color: #ffffff !important;
+  background: rgba(50,115,220,.18) !important;
+}
+
+body.hs-dark .file-panel .breadcrumb li + li::before {
+  color: #8f99a4 !important;
+}
+
+/* Selection contrast inside Files */
+body.hs-dark .file-panel ::selection,
+body.hs-dark .file-modal ::selection {
+  background: #3273dc !important;
+  color: #ffffff !important;
+}
+
+
+/* =========================================================
+   TOP BAR TOGGLE STATE
+   Open top bar  = X (close)
+   Closed top bar = hamburger (open)
+   Theme toggle only appears while the top bar is open.
+   ========================================================= */
+
+/* OPEN state: turn hamburger into an X. */
+body:not(.hs-nav-collapsed) .hs-hamburger::before {
+  top: 6px !important;
+  transform: rotate(45deg) !important;
+}
+
+body:not(.hs-nav-collapsed) .hs-hamburger span {
+  opacity: 0 !important;
+}
+
+body:not(.hs-nav-collapsed) .hs-hamburger::after {
+  top: 6px !important;
+  transform: rotate(-45deg) !important;
+}
+
+/* CLOSED state: restore the normal three-line hamburger. */
+body.hs-nav-collapsed .hs-hamburger::before {
+  top: 0 !important;
+  transform: none !important;
+}
+
+body.hs-nav-collapsed .hs-hamburger span {
+  top: 6px !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+body.hs-nav-collapsed .hs-hamburger::after {
+  top: 12px !important;
+  transform: none !important;
+}
+
+/* When collapsed, only the hamburger/open button remains. */
+body.hs-nav-collapsed #hs-theme-toggle {
+  display: none !important;
+}
+
+body.hs-nav-collapsed #hs-toolbar {
+  margin-right: 0 !important;
+}
